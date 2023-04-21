@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using KcalCalc.Models;
 
 namespace KcalCalc.Data
@@ -19,6 +20,11 @@ namespace KcalCalc.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Person>()
+                .HasOne(p => p.IdentityUser)
+                .WithOne()
+                .HasForeignKey<Person>(p => p.IdentityUserID);
 
             builder.Entity<KcalDay>()
                 .HasOne(p => p.Person)
