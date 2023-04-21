@@ -1,6 +1,7 @@
 ﻿using KcalCalc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KcalCalc.Controllers
 {
@@ -13,6 +14,7 @@ namespace KcalCalc.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
