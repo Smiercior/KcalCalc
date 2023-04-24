@@ -15,4 +15,10 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: dimgray;
+  color: white;
+}
+
+.w-95{
+  width: 95%;
 }
