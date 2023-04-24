@@ -1,9 +1,26 @@
-﻿@{
+﻿@model Person
+@{
     ViewData["Title"] = "Home Page";
+    var actualKcalDay = Model.KcalDays.FirstOrDefault(kcalDay => kcalDay.Date.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd"));
 }
-@model Person
 
 <div class="text-center">
-    <h1 class="display-4"> Welcome <span class="text-info">@Model.Firstname</span> in kcal calkulator page </h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4 mb-5"> Welcome <span class="text-info">@Model.Firstname</span> in kcal calkulator page </h1>
+    <div class="border border-primary w-50 m-auto">
+        <div class="hr-text mt-2 fs-5">
+            Your kcal day products - @actualKcalDay.Date.ToString("dd.MM.yyyy")
+        </div>
+        <hr class="bg-primary">
+        @if(actualKcalDay.ProductEntries == null || actualKcalDay.ProductEntries.Count == 0)
+        {
+            <p class="text-danger">There aren't any products in your day</p>
+        }
+        else
+        {
+            @foreach (var productEntry in actualKcalDay.ProductEntries)
+            {
+                
+            }
+        }
+    </div>
 </div>

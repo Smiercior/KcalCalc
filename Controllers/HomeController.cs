@@ -25,8 +25,22 @@ namespace KcalCalc.Controllers
         public IActionResult Index()
         {
             var userId = _userManager.GetUserId(User);
-            PersonService personService = new PersonService(_dbContext);
-            var person = personService.GetAll().FirstOrDefault(p => p.IdentityUserID == userId);
+            var person = _dbContext.Persons.FirstOrDefault(person => person.IdentityUserID == userId);
+
+            // If a person exists, check if he has a kcal day with today's data
+            if(person != null)
+            {
+                var kcalDay = person.KcalDays?.FirstOrDefault(kcalDay => kcalDay?.Date.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd"));    
+                if(kcalDay == null)
+                {
+                    person.KcalDays = new List<KcalDay>();
+                    var newKcalDay = new KcalDay();
+                    newKcalDay.Date = DateTime.Now;
+                    person.KcalDays.Add(newKcalDay);
+                    _dbContext.SaveChanges();
+                }
+            }  
+                
             return View(person);
         }
 
