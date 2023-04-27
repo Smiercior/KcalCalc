@@ -17,6 +17,10 @@ namespace KcalCalc.Models
 
         [Required]
         [Range(0, 5000)]
+        public float Kcal {get; set;}
+
+        [Required]
+        [Range(0, 5000)]
         public float Protein {get; set;}
 
         [Required]
