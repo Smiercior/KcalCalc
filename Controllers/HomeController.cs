@@ -1,6 +1,7 @@
 ﻿using KcalCalc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using KcalCalc.Services;
@@ -25,7 +26,11 @@ namespace KcalCalc.Controllers
         public IActionResult Index()
         {
             var userId = _userManager.GetUserId(User);
-            var person = _dbContext.Persons.FirstOrDefault(person => person.IdentityUserID == userId);
+            var person = _dbContext.Persons
+            .Include(p => p.KcalDays)
+            .ThenInclude(k => k.ProductEntries)
+            .ThenInclude(pe => pe.Product)
+            .Single(p => p.IdentityUserID == userId);
 
             // If a person exists, check if he has a kcal day with today's data
             if(person != null)
@@ -43,6 +48,7 @@ namespace KcalCalc.Controllers
                 
             return View(person);
         }
+
 
         public IActionResult Privacy()
         {

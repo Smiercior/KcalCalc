@@ -22,3 +22,19 @@ body {
 .w-95{
   width: 95%;
 }
+
+#kcal{
+  color: lightcoral;
+}
+
+#protein{
+  color: lightblue;
+}
+
+#carbs{
+  color: #ff00ff;
+}
+
+#fat{
+  color: orange;
+}
