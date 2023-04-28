@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace KcalCalc.Models
 {
@@ -35,6 +36,7 @@ namespace KcalCalc.Models
         [Range(0, 5000)]
         public int BasicAmountGram {get; set;}
 
-        public virtual ICollection<ProductEntry> ProductEntries {get; set;}
+        [BindNever]
+        public virtual ICollection<ProductEntry>? ProductEntries {get; set;}
     }
 }
