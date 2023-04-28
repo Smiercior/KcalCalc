@@ -27,6 +27,10 @@ body {
   color: lightcoral;
 }
 
+p span{
+  color: white;
+}
+
 #protein{
   color: lightblue;
 }
@@ -37,4 +41,8 @@ body {
 
 #fat{
   color: orange;
+}
+
+#kcalBackground{
+  background-color: gray;
 }

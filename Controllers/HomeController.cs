@@ -25,6 +25,7 @@ namespace KcalCalc.Controllers
         [Authorize]
         public IActionResult Index()
         {
+            // Connect all tables
             var userId = _userManager.GetUserId(User);
             var person = _dbContext.Persons
             .Include(p => p.KcalDays)
@@ -38,10 +39,9 @@ namespace KcalCalc.Controllers
                 var kcalDay = person.KcalDays?.FirstOrDefault(kcalDay => kcalDay?.Date.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd"));    
                 if(kcalDay == null)
                 {
-                    person.KcalDays = new List<KcalDay>();
                     var newKcalDay = new KcalDay();
                     newKcalDay.Date = DateTime.Now;
-                    person.KcalDays.Add(newKcalDay);
+                    person?.KcalDays?.Add(newKcalDay);
                     _dbContext.SaveChanges();
                 }
             }  
@@ -49,6 +49,28 @@ namespace KcalCalc.Controllers
             return View(person);
         }
 
+        public IActionResult KcalDay(int id)
+        {
+            // Connect all tables
+            KcalDay kcalDay = null;
+
+            if(id > 0)
+            {
+                kcalDay = _dbContext.KcalDays
+                .Include(k => k.ProductEntries)
+                .ThenInclude(pe => pe.Product)
+                .SingleOrDefault(k => k.ID == id);
+            }
+            else if(id == 0)
+            {       
+                kcalDay = _dbContext.KcalDays
+                .Include(k => k.ProductEntries)
+                .ThenInclude(pe => pe.Product)
+                .Single(kD => kD.Date.Date == DateTime.Today.Date);
+            }
+            
+            return View(kcalDay);
+        }
 
         public IActionResult Privacy()
         {

@@ -1,0 +1,41 @@
+@model KcalDay
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <div class="border border-dark border-3 w-50 m-auto">
+        @if(Model != null)
+        {
+            <div class="hr-text mt-2 mb-2 fs-5">
+            Your kcal day (@Model?.Date.ToString("yyyy-MM-dd"))
+            </div>
+            <div class="border border-dark border-1 w-95 m-auto"></div>
+            <div class="mt-2">
+                @if (Model?.ProductEntries == null || Model?.ProductEntries.Count() == 0)
+                {
+                    <p class="text-warning">Add products to your day</p>
+                }
+            </div>
+            <div id="kcalBackground" class="row w-100 m-auto">
+                <div class="col-3">
+                    <p id="kcal" class="m-auto">kcal: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Kcal).Sum()</span></p>
+                </div>
+                <div class="col-3">
+                    <p id="protein" class="m-auto">Protein: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Protein).Sum()</span></p>
+                </div>
+                <div class="col-3">
+                    <p id="carbs" class="m-auto">Carbs: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Carbohydrate).Sum()</span></p>
+                </div>
+                <div class="col-3">
+                    <p id="fat" class="m-auto">Fat: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Fat).Sum()</span></p>
+                </div>
+            </div>
+            <button class="btn btn-success w-100">+</button>
+        }
+        else
+        {
+            <div class="hr-text mt-2 mb-2 fs-5"><p class="text-danger">That day doesn't exist</p></div>
+        }
+    </div>
+</div>

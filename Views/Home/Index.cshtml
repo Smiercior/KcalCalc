@@ -7,7 +7,7 @@
     <h1 class="display-4 mb-5"> Welcome <span class="text-info">@Model.Firstname</span> in kcal calkulator page </h1>
     <div class="border border-dark border-3 w-50 m-auto">
         <div class="hr-text mt-2 mb-2 fs-5">
-            Your kcal days
+            Last kcal days
         </div>
         <div class="border border-dark border-1 w-95 m-auto"></div>
         <div class="mt-2">
@@ -21,19 +21,19 @@
                 {
                     <div class="row">
                         <div class="col-3 pl-0">
-                            <p class="text-info">@kcalDay.Date.ToString("yyyy-MM-dd")</p>
+                            <a href="@Url.Action("KcalDay", "Home", new {id = kcalDay.ID})"><p class="text-info">@kcalDay.Date.ToString("yyyy-MM-dd")</p></a>
                         </div>
-                        <div class="col-2">
-                            <p id="kcal">kcal: @kcalDay.ProductEntries.Select(pe => pe?.Product.Kcal).Sum()</p>
-                        </div>
-                         <div class="col-2">
-                            <p id="protein">Protein: @kcalDay.ProductEntries.Select(pe => pe?.Product.Protein).Sum()</p>
+                        <div class="col-2">          
+                            <p id="kcal">kcal: <span>@kcalDay?.ProductEntries.Select(pe => pe?.Product.Kcal).Sum()</span></p>
                         </div>
                          <div class="col-2">
-                            <p id="carbs">Carbs: @kcalDay.ProductEntries.Select(pe => pe?.Product.Carbohydrate).Sum()</p>
+                            <p id="protein">Protein: <span>@kcalDay?.ProductEntries.Select(pe => pe?.Product.Protein).Sum()</span></p>
+                        </div>
+                         <div class="col-2">
+                            <p id="carbs">Carbs: <span>@kcalDay?.ProductEntries.Select(pe => pe?.Product.Carbohydrate).Sum()</span></p>
                         </div>
                         <div class="col-2">
-                            <p id="fat">Fat: @kcalDay.ProductEntries.Select(pe => pe?.Product.Fat).Sum()</p>
+                            <p id="fat">Fat: <span>@kcalDay?.ProductEntries.Select(pe => pe?.Product.Fat).Sum()</span></p>
                         </div>     
                     </div>
                     
