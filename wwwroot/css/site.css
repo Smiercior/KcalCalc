@@ -23,6 +23,10 @@ body {
   width: 95%;
 }
 
+.name{
+  color: lightgreen;
+}
+
 #kcal{
   color: lightcoral;
 }

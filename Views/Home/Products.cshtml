@@ -1,0 +1,81 @@
+@model Product
+@{
+    ViewData["Title"] = "Products Page";
+}
+
+<div class="text-center">
+    <div class="row">
+        <div class="col-3">
+            <h4>Add product</h4>
+            <form method="post" asp-action="Products">
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter product name"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Brand"></label>
+                    <input asp-for="Brand" class="form-control" placeholder="Enter product brand"/>
+                    <span asp-validation-for="Brand" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @Html.Label("BasicAmountGram","Product weight (gram)")
+                    <input asp-for="BasicAmountGram" class="form-control" placeholder="Product amount in gram"/>
+                    <span asp-validation-for="BasicAmountGram" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Kcal"></label>
+                    <input asp-for="Kcal" class="form-control" placeholder="Enter product brand"/>
+                    <span asp-validation-for="Kcal" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Protein"></label>
+                    <input asp-for="Protein" class="form-control" placeholder="Enter product brand"/>
+                    <span asp-validation-for="Protein" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Carbohydrate"></label>
+                    <input asp-for="Carbohydrate" class="form-control" placeholder="Enter product brand"/>
+                    <span asp-validation-for="Carbohydrate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Fat"></label>
+                    <input asp-for="Fat" class="form-control" placeholder="Enter product brand"/>
+                    <span asp-validation-for="Fat" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-success mt-2 w-50">Add</button>
+            </form>
+
+        </div>
+        <div class="col-9">
+             <h4>Available products</h4>
+             <div class="border border-dark border-3 w-50 m-auto">
+                 @if(ViewBag.products == null || ViewBag.products?.Count == 0)
+                 {
+                    <p class="text-warning m-auto">There aren't any products</p>
+                 }
+                 else
+                 {
+                     @foreach (Product product in ViewBag.products)
+                     {
+                        <p id="kcalBackground" class="name mb-2">@product.Name (@product.Brand) x @product.BasicAmountGram g</p>
+                        <div class="row w-100 ms-auto me-auto mb-3">
+                        <div class="col-3">
+                            <p id="kcal" class="m-auto">kcal: <span>@product.Kcal</span></p>
+                        </div>
+                        <div class="col-3">
+                            <p id="protein" class="m-auto">Protein: <span>@product.Protein</span></p>
+                        </div>
+                        <div class="col-3">
+                            <p id="carbs" class="m-auto">Carbs: <span>@product.Carbohydrate</span></p>
+                        </div>
+                        <div class="col-3">
+                            <p id="fat" class="m-auto">Fat: <span>@product.Fat</span></p>
+                        </div>
+                    </div> 
+                     }
+                 }
+             </div>
+        </div>
+    </div>
+</div>

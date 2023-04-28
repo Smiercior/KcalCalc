@@ -1,6 +1,7 @@
 ﻿using KcalCalc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Dynamic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -49,10 +50,11 @@ namespace KcalCalc.Controllers
             return View(person);
         }
 
+        [Authorize]
         public IActionResult KcalDay(int id)
         {
             // Connect all tables
-            KcalDay kcalDay = null;
+            KcalDay? kcalDay = null;
 
             if(id > 0)
             {
@@ -70,6 +72,28 @@ namespace KcalCalc.Controllers
             }
             
             return View(kcalDay);
+        }
+
+        [Authorize]
+        public IActionResult Products()
+        {
+            var products = _dbContext.Products.ToList();
+            var product = new Product();
+            ViewBag.products = products;
+            return View(product);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Products(Product product)
+        {
+            if(ModelState.IsValid)
+            {
+                _dbContext.Products.Add(product);
+                _dbContext.SaveChanges();
+            }
+
+            return Redirect("/Home/Products");
         }
 
         public IActionResult Privacy()
