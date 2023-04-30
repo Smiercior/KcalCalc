@@ -1,0 +1,51 @@
+@model List<Product>
+
+<div class="row">
+    @if (Model?.Count > 0)
+    {
+        @foreach (var product in Model)
+        {
+        <form method="post" action='@Url.Action("AddProductToDay", "Home")'>
+            <div class="row text-start ms-3 mt-4 d-flex align-items-center justify-contend-start">
+                <div class="col-2 pe-1 p-0 name">
+                    @product.Name (@product.Brand)
+                </div>   
+                <div class="col-1 p-0">
+                    portion:
+                </div> 
+                <div class="col-2 ps-1 p-0">
+                     <input class="form-control w-75" value="1" name="quantity" type="text" oninput="this.value = this.value.replace(/^[0]+/g,'').replace(/(?:^0$|[^\d.])/g, '').replace(/^0+(\d)/gm, '$1')" pattern="\d+" min="0" step="1" />
+                </div>
+            </div>
+
+            <div class="row text-start ms-3 mt-1 mb-1 d-flex align-items-center">
+                <div class="col-2"><span class="kcal">Kcal:&nbsp;</span>@product.Kcal</div>
+                <div class="col-2"><span class="protein">Protein:&nbsp;</span>@product.Protein</div>
+                <div class="col-2"><span class="carbs">Carbs:&nbsp;</span>@product.Carbohydrate</div>
+                <div class="col-2"><span class="fat">Fat:&nbsp;</span>@product.Fat</div>  
+                <div class="col-2"><span class="fat">Amount:&nbsp;</span>@product.BasicAmountGram gram</div>  
+                <div class="col-2">       
+                    <input type="hidden" name="productId" value="@product.ID"/>
+                    <input type="hidden" name="kcalDayId" value="@ViewBag.kcalDayId"/>
+                    <button class="btn btn-success btn-sm" type="submit">+</button>           
+                </div>          
+            </div>
+        </form>      
+
+        <div class="row d-flex justify-contend-start mt-1 m-0 p-0">
+            <div class="col-12">
+                <div class="border border-dark border-1"></div>
+            </div>     
+        </div>
+         
+        }
+    }
+    else
+    {
+        <div class="row text-start ms-3 mt-1 d-flex align-items-center">
+            <div class="col-12 text-warning text-center">
+                There aren't any products that fit your filter
+            </div>  
+        </div>
+    }
+</div>

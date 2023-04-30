@@ -16,22 +16,66 @@
                 {
                     <p class="text-warning">Add products to your day</p>
                 }
+                else
+                {
+                    var finalProductAmount = 0f;
+                    var finalKcal = 0f;
+                    var finalProtein = 0f;
+                    var finalCarbohydrates = 0f;
+                    var finalFat = 0f;
+
+                    foreach(var productEntry in Model.ProductEntries)
+                    {
+                        finalProductAmount = productEntry.Product.BasicAmountGram*productEntry.ProductAmount;
+                        finalKcal = productEntry.Product.Kcal*productEntry.ProductAmount;
+                        finalProtein = productEntry.Product.Protein*productEntry.ProductAmount;
+                        finalCarbohydrates = productEntry.Product.Carbohydrate*productEntry.ProductAmount;
+                        finalFat = productEntry.Product.Fat*productEntry.ProductAmount;
+                        <div class="row text-start ms-3 mt-4 d-flex align-items-center justify-contend-start">
+                            <div class="col-12 pe-1 p-0 name">
+                                @productEntry.Product.Name (@productEntry.Product.Brand)
+                            </div>
+                        </div>
+
+                        <div class="row text-start ms-3 mt-1 mb-1 d-flex align-items-center">
+                            <div class="col-2 ps-0"><span class="kcal">Kcal:&nbsp;</span>@finalKcal</div>
+                            <div class="col-2"><span class="protein">Protein:&nbsp;</span>@finalProtein</div>
+                            <div class="col-2"><span class="carbs">Carbs:&nbsp;</span>@finalCarbohydrates</div>
+                            <div class="col-2"><span class="fat">Fat:&nbsp;</span>@finalFat</div>  
+                            <div class="col-3"><span class="fat">Amount:&nbsp;</span>@finalProductAmount g</div>
+                            <div class="col-1 p-0"></div>                           
+                        </div> 
+                        <form method="post" action='@Url.Action("KcalDay", "Home")'>
+                            <input type="hidden" name="id" value="@Model.ID"/>
+                            <input type="hidden" name="productEntryId" value="@productEntry.ID"/>
+                            <div class="row w-100 m-0">
+                                <button type="submit" class="btn btn-sm btn-danger">x</button>
+                            </div>
+                        </form> 
+                        
+                        <div class="row d-flex justify-contend-start m-0 p-0">
+                            <div class="col-12 p-0">
+                                <div class="border border-dark border-1"></div>
+                            </div>     
+                        </div>  
+                    }
+                }
             </div>
-            <div id="kcalBackground" class="row w-100 m-auto">
+            <div id="kcalBackground" class="row w-100 m-auto d-flex align-items-center">
                 <div class="col-3">
-                    <p id="kcal" class="m-auto">kcal: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Kcal).Sum()</span></p>
+                    <p id="kcal" class="m-auto">kcal: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Kcal*pe?.ProductAmount).Sum()</span></p>
                 </div>
                 <div class="col-3">
-                    <p id="protein" class="m-auto">Protein: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Protein).Sum()</span></p>
+                    <p id="protein" class="m-auto">Protein: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Protein*pe?.ProductAmount).Sum()</span></p>
                 </div>
                 <div class="col-3">
-                    <p id="carbs" class="m-auto">Carbs: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Carbohydrate).Sum()</span></p>
+                    <p id="carbs" class="m-auto">Carbs: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Carbohydrate*pe?.ProductAmount).Sum()</span></p>
                 </div>
                 <div class="col-3">
-                    <p id="fat" class="m-auto">Fat: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Fat).Sum()</span></p>
+                    <p id="fat" class="m-auto">Fat: <span>@Model?.ProductEntries.Select(pe => pe?.Product.Fat*pe?.ProductAmount).Sum()</span></p>
                 </div>
             </div>
-            <button class="btn btn-success w-100">+</button>
+            <a href='@Url.Action("AddProductToDay", "Home", new {kcalDayId = Model?.ID})' class="btn btn-success w-100">+</a>
         }
         else
         {

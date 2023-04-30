@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Globalization;
+using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +47,13 @@ namespace KcalCalc.Controllers
                     newKcalDay.Date = DateTime.Now;
                     person?.KcalDays?.Add(newKcalDay);
                     _dbContext.SaveChanges();
+
+                    // Get all tables with updated data
+                    person = _dbContext.Persons
+                    .Include(p => p.KcalDays)
+                    .ThenInclude(k => k.ProductEntries)
+                    .ThenInclude(pe => pe.Product)
+                    .Single(p => p.IdentityUserID == userId);
                 }
             }  
                 
@@ -72,6 +82,108 @@ namespace KcalCalc.Controllers
             }
             
             return View(kcalDay);
+        }
+
+        [HttpPost]
+        public IActionResult KcalDay(int id, int productEntryId)
+        {
+            var productEntry = _dbContext.ProductEntries.FirstOrDefault(pe => pe.ID == productEntryId);
+            if(productEntry != null)
+            {
+                _dbContext.ProductEntries.Remove(productEntry);
+                _dbContext.SaveChanges();
+            }
+            return RedirectToAction("KcalDay",new {id = id});
+        }
+
+        [Authorize]
+        public IActionResult AddProductToDay(int kcalDayId)
+        {
+            Console.WriteLine(kcalDayId);
+            var products = _dbContext.Products.ToList();
+            ViewBag.kcalDayId = kcalDayId;
+            return View(products);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddProductToDay(int productId, int quantity, int kcalDayId)
+        { 
+            var productEntry = new ProductEntry();
+            productEntry.KcalDayID = kcalDayId;
+            productEntry.ProductID = productId;
+            productEntry.ProductAmount = quantity;
+            _dbContext.ProductEntries.Add(productEntry);
+            _dbContext.SaveChanges();    
+            return RedirectToAction("KcalDay",new {id = kcalDayId});
+        }
+
+        [HttpPost]
+        public IActionResult FilterProducts([FromBody] ProductFilter filter)
+        {
+            var products = _dbContext.Products.ToList();
+            if(filter is not null)
+            {
+                float? kcal = null;
+                if(!string.IsNullOrEmpty(filter.Kcal))
+                {
+                    kcal = float.Parse(filter.Kcal, CultureInfo.InvariantCulture);
+                }
+
+                float? protein = null;
+                if(!string.IsNullOrEmpty(filter.Protein))
+                {
+                    protein = float.Parse(filter.Protein, CultureInfo.InvariantCulture);
+                }
+
+                float? carbohydrates = null;
+                if(!string.IsNullOrEmpty(filter.Carbohydrates))
+                {
+                    carbohydrates = float.Parse(filter.Carbohydrates, CultureInfo.InvariantCulture);
+                }
+
+                float? fat = null;
+                if(!string.IsNullOrEmpty(filter.Fat))
+                {
+                    fat = float.Parse(filter.Fat, CultureInfo.InvariantCulture);
+                }
+
+                products = products.Where(CreateProductFilterExpression(filter.ProductName, kcal, protein, carbohydrates, fat).Compile()).ToList();
+            }
+            return PartialView("_ProductListPartial", products);
+        }
+
+        private static Expression<Func<Product, bool>> CreateProductFilterExpression(string? productName, float? kcal, float? protein, float? carbohydrates, float? fat)
+        {
+            var parameterExpression = Expression.Parameter(typeof(Product), "p");
+
+            Expression expression = Expression.Constant(true);
+            if(!string.IsNullOrEmpty(productName))
+            {
+                expression = Expression.Call(Expression.Property(parameterExpression, "Name"), "Contains", Type.EmptyTypes, Expression.Constant(productName));
+            }
+
+            if(kcal.HasValue)
+            {
+                expression = Expression.And(expression, Expression.GreaterThanOrEqual(Expression.Property(parameterExpression, "Kcal"), Expression.Constant(kcal.Value)));
+            }
+
+            if(protein.HasValue)
+            {
+                expression = Expression.And(expression, Expression.GreaterThanOrEqual(Expression.Property(parameterExpression, "Protein"), Expression.Constant(protein.Value)));
+            }
+
+            if(carbohydrates.HasValue)
+            {
+                expression = Expression.And(expression, Expression.GreaterThanOrEqual(Expression.Property(parameterExpression, "Carbohydrates"), Expression.Constant(carbohydrates.Value)));
+            }
+
+            if(fat.HasValue)
+            {
+                expression = Expression.And(expression, Expression.GreaterThanOrEqual(Expression.Property(parameterExpression, "Fat"), Expression.Constant(fat.Value)));
+            }
+
+            return Expression.Lambda<Func<Product, bool>>(expression, parameterExpression);
         }
 
         [Authorize]

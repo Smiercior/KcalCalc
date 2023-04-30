@@ -27,8 +27,57 @@ body {
   color: lightgreen;
 }
 
-#kcal{
+.kcal{
   color: lightcoral;
+}
+
+.protein{
+  color: lightblue;
+}
+
+.carbs{
+  color: #ff00ff;
+}
+
+.fat{
+  color: orange;
+}
+
+#productNameInput{
+  color: green;
+}
+
+#productNameInput::placeholder{
+  color: green;
+}
+
+#productKcalInput{
+  color: lightcoral;
+}
+
+#productKcalInput::placeholder{
+  color: lightcoral;
+}
+
+#productProteinInput{
+  color: lightblue;
+}
+#productProteinInput::placeholder{
+  color: lightblue;
+}
+
+#productCarbsInput{
+  color: #ff00ff;
+}
+#productCarbsInput::placeholder{
+  color: #ff00ff;
+}
+
+#productFatInput{
+  color: orange;
+}
+#productFatInput::placeholder{
+  color: orange;
 }
 
 p span{
