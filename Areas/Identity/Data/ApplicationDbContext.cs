@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KcalCalc.Areas.Identity.Data;
 
-public class ApplicationDbContextOld : IdentityDbContext<IdentityUser>
+public class ApplicationDbContextIdentity : IdentityDbContext<IdentityUser>
 {
-    public ApplicationDbContextOld(DbContextOptions<ApplicationDbContextOld> options)
+    public ApplicationDbContextIdentity(DbContextOptions<ApplicationDbContextIdentity> options)
         : base(options)
     {
     }
