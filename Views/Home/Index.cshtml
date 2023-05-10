@@ -5,6 +5,10 @@
 
 <div class="text-center">
     <h1 class="display-4 mb-5"> Welcome <span class="text-info">@Model.Firstname</span> in kcal calkulator page </h1>
+    @if(!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+    {
+         <h4 class="alert alert-danger w-50 mb-3 m-auto">@ViewData["ErrorMessage"]</h4>
+    }
     <div class="border border-dark border-3 w-50 m-auto">
         <div class="hr-text mt-2 mb-2 fs-5">
             Last kcal days
@@ -21,7 +25,7 @@
                 {
                     <div class="row">
                         <div class="col-3 pl-0">
-                            <a href="@Url.Action("KcalDay", "Home", new {id = kcalDay.ID})"><p class="text-info">@kcalDay.Date.ToString("yyyy-MM-dd")</p></a>
+                            <a href='@Url.Action("KcalDay", "Home", new {id = kcalDay.ID})'><p class="text-info">@kcalDay.Date.ToString("yyyy-MM-dd")</p></a>
                         </div>
                         <div class="col-2">          
                             <p id="kcal">kcal: <span>@kcalDay?.ProductEntries.Select(pe => pe?.Product.Kcal).Sum()</span></p>

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using KcalCalc.Services;
 using KcalCalc.Data;
+using KcalCalc.Filters;
 
 namespace KcalCalc.Controllers
 {
@@ -27,7 +28,7 @@ namespace KcalCalc.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(string errorMessage = "")
         {
             // Connect all tables
             var userId = _userManager.GetUserId(User);
@@ -40,6 +41,13 @@ namespace KcalCalc.Controllers
             // If a person exists, check if he has a kcal day with today's data
             if(person != null)
             {
+                // Get any error message
+                if(!string.IsNullOrEmpty(errorMessage))
+                {
+                    ViewData["ErrorMessage"] = errorMessage;
+                }
+
+                // Create kcal day with today's data if it doesn't exist
                 var kcalDay = person.KcalDays?.FirstOrDefault(kcalDay => kcalDay?.Date.ToString("yyyy-MM-dd") == DateTime.Now.ToString("yyyy-MM-dd"));    
                 if(kcalDay == null)
                 {
@@ -61,6 +69,7 @@ namespace KcalCalc.Controllers
         }
 
         [Authorize]
+        [PersonAuthoization]
         public IActionResult KcalDay(int id)
         {
             // Connect all tables
