@@ -69,10 +69,12 @@ namespace KcalCalc.Controllers
         }
 
         [Authorize]
-        [PersonAuthoization]
+        [PersonAuthorization]
         public IActionResult KcalDay(int id)
         {
             // Connect all tables
+            var userId = _userManager.GetUserId(User);
+            var person = _dbContext.Persons.Single(p => p.IdentityUserID == userId);
             KcalDay? kcalDay = null;
 
             if(id > 0)
@@ -87,7 +89,7 @@ namespace KcalCalc.Controllers
                 kcalDay = _dbContext.KcalDays
                 .Include(k => k.ProductEntries)
                 .ThenInclude(pe => pe.Product)
-                .Single(kD => kD.Date.Date == DateTime.Today.Date);
+                .Single(kD => kD.Date.Date == DateTime.Today.Date && kD.PersonID == person.ID);
             }
             
             return View(kcalDay);

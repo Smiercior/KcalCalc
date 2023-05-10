@@ -8,20 +8,20 @@ using Microsoft.EntityFrameworkCore;
 namespace KcalCalc.Filters
 {
     // Checks if user has access to certain kcal day
-    public class PersonAuthoizationAttribute : TypeFilterAttribute
+    public class PersonAuthorizationAttribute : TypeFilterAttribute
     {
-        public PersonAuthoizationAttribute(): base(typeof(PersonAuthoizationFilter))
+        public PersonAuthorizationAttribute(): base(typeof(PersonAuthorizationFilter))
         {
 
         }
     }
-    public class PersonAuthoizationFilter : IActionFilter
+    public class PersonAuthorizationFilter : IActionFilter
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PersonAuthoizationFilter(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, UserManager<IdentityUser> userManager)
+        public PersonAuthorizationFilter(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, UserManager<IdentityUser> userManager)
         {
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
@@ -49,10 +49,11 @@ namespace KcalCalc.Filters
                             if(kcalDay.PersonID == person.ID) return true;
                          }
                      }  
-                }  
+                } 
+                return false; 
             }
-
-            return false;
+            
+            return true;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
