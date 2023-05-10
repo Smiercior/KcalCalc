@@ -8,7 +8,8 @@ It is a simple web application that is used as a kcal calculator
 * Adding products
 
 ## Screenshots
-![Home](Screenshots/home.png)
+![Home](Screenshots/Home.png)
 ![Kcal day](Screenshots/KcalDay.png)
 ![Add product to kcal day](Screenshots/AddProductToKcalDay.png)
 ![Products](Screenshots/Products.png)
+![ERD](Screenshots/ERD.PNG)
